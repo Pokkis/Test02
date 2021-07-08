@@ -2,11 +2,10 @@
 #define MAXBUF 256
 
 int port = 5000;
-char *multicast_addr = "224.0.1.1 ";
+char *multicast_addr = "224.0.1.1";
 
 int main(int argc, char *argv[])
 {
-
   int s, n;
   struct sockaddr_in srv, cli;
   socklen_t cli_len = sizeof(cli);
@@ -53,6 +52,17 @@ int main(int argc, char *argv[])
     {
       buf[n] = 0;
       fprintf(stdout, "receive   msg   from %s: %s\n ", inet_ntoa(cli.sin_addr), buf);
+    }
+
+    strcat(buf, " to you");
+    if (sendto(s, buf, strlen(buf), 0, (struct sockaddr *)&cli, (socklen_t)sizeof(cli)) < 0)
+    {
+      perror("sendto ");
+      return 0;
+    }
+    else
+    {
+        fprintf(stdout, "send   to   group   %s   :   %s\n ", multicast_addr, buf);
     }
   }
 
