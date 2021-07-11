@@ -55,7 +55,7 @@ static int print_nal_type(int nal_type)
     {
         if(nal_type == g_nal_str[i].nal_type)
         {
-            BLUE_TRACE("type:%s\n", g_nal_str[i].str);
+            BLUE_TRACE("type:%d %s\n", g_nal_str[i].nal_type, g_nal_str[i].str);
         }
     }
    return 0; 
@@ -89,13 +89,15 @@ int parse_h264_file(char *buff, int n_read_len, int *n_parse_len)
     char *p_parse_buff = buff;
     *n_parse_len = 0;
     int parse_step = 1;
+    int nal_type = 0;
 
     while(n_read_len)
     {
         parse_step = 1;
         if(find_nal_type(p_buff, n_read_len))
         {
-            print_nal_type(*(p_buff+4));
+            nal_type = *(p_buff+4) & 0x8f;
+            print_nal_type(nal_type);
             parse_step = 4;
             p_parse_buff = p_buff + 4;
         }

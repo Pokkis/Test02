@@ -22,13 +22,14 @@ int main()
         return -1;
     }
 
-    while(n_read_len = fread(buff+n_parse_remain_len, 1, MAX_BUFF_LEN - n_parse_remain_len, p_fp))
+    while((n_read_len = fread(buff+n_parse_remain_len, 1, MAX_BUFF_LEN - n_parse_remain_len, p_fp)) > 0)
     {
         parse_h264_file(buff, n_read_len, &n_parse_remain_len);
         if(n_parse_remain_len)
         {
             memmove(buff, buff + n_read_len - n_parse_remain_len, n_parse_remain_len);
         }
+        //printf("n_read_len:%d\n", n_read_len);
     }
 
     return 0;
