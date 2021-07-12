@@ -50,12 +50,22 @@ static const nal_str  g_nal_str[] =
 
 static int print_nal_type(int nal_type)
 {
+    static int I = 0;
+    static int P = 0;
     int i = 0;
     for(i = 0; i < sizeof(g_nal_str) / sizeof(g_nal_str[0]); i++)
     {
         if(nal_type == g_nal_str[i].nal_type)
         {
-            BLUE_TRACE("type:%d %s\n", g_nal_str[i].nal_type, g_nal_str[i].str);
+            if(nal_type == NAL_IDR_SLICE)
+            {
+                I++;
+            }
+            else if(nal_type == NAL_SLICE)
+            {
+                P++;
+            }
+            BLUE_TRACE("type:%d %s I:%d P:%d\n", g_nal_str[i].nal_type, g_nal_str[i].str, I, P);
         }
     }
    return 0; 
