@@ -5,7 +5,8 @@
 #include "file_parse.h"
 #include "../common/my_err.h"
 
-#define H264_FILE_NAME   "../resource/128x128.264"
+//#define H264_FILE_NAME   "../resource/128x128.264"
+#define H264_FILE_NAME   "../resource/vlc-output.h264"
 #define MAX_BUFF_LEN      1024
 
 int main()
