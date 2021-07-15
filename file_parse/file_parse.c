@@ -48,7 +48,7 @@ static const nal_str  g_nal_str[] =
     {NAL_FF_IGNORE, "NAL_FF_IGNORE"},
 };
 
-static int print_nal_type(int nal_type)
+int print_nal_type(int nal_type)
 {
     static int I = 0;
     static int P = 0;
@@ -87,6 +87,27 @@ static bool find_nal_type(char *buff, int n_read_len)
     return false;
 }
 
+char* find_nal_start_code(char *buff, int n_read_len)
+{
+    if(NULL == buff || n_read_len < 4)
+    {
+        return NULL;
+    }
+
+    int i = 0;
+    for(i = 0; i < n_read_len - 4; i++)
+    {
+        if(buff[i] == 0x00 && buff[i+1] == 0x00 && 
+            buff[i+2] == 0x00 && buff[i+3] == 0x01)
+        {
+            return &buff[i];
+        }
+    }
+    
+    return NULL;
+}
+
+
 int parse_h264_file(char *buff, int n_read_len, int *n_parse_len)
 {
     if(NULL == buff || NULL == n_parse_len)
@@ -106,7 +127,9 @@ int parse_h264_file(char *buff, int n_read_len, int *n_parse_len)
         parse_step = 1;
         if(find_nal_type(p_buff, n_read_len))
         {
-            nal_type = *(p_buff+4) & 0x8f;
+            nal_type = *(p_buff+4) & 0x1f;
+            //nal_type = (*(p_buff+4) & 0xf8) >> 3;
+            BLUE_TRACE("nal_type:%d nal-heard:%d\n", nal_type, *(p_buff+4));
             print_nal_type(nal_type);
             parse_step = 4;
             p_parse_buff = p_buff + 4;
@@ -117,4 +140,54 @@ int parse_h264_file(char *buff, int n_read_len, int *n_parse_len)
     *n_parse_len = p_parse_buff - buff;
 
     return 0;
+}
+
+int copy_nal_from_file(FILE *fp, char *p_buff, int buff_len, int *read_len)
+{
+    if(NULL == fg || NULL == p_buff || NULL == read_len)
+    {
+        ERR("NULL pointer\n");
+        return -1;
+    }
+
+    static char temp_buff[1024] = { 0 };
+    static int temp_last = 0;
+    *read_len = 0;
+    //记录start_code次数
+    int start_code_count = 0;
+
+    int n = 0;
+    char *p_tmp = NULL; 
+    int copy_len = 0;
+    while((fread(temp_buff+temp_last, 1, 1024 - temp_last, fp)) > 0)
+    {
+        if(start_code_count == 0)
+        {
+            p_tmp = find_nal_start_code(temp_buff, 1024);
+            if(p_tmp)
+            {
+                char *p_start = p_tmp; //记录找到start_code buff的位置
+                p_tmp = find_nal_start_code(p_tmp+4, 1024 - (p_start - temp_buff));
+                if(p_tmp)
+                {
+                    if(buff_len > (p_tmp - p_start))
+                    {
+                        memcpy(p_buff+*read_len, p_start, p_tmp - p_start)
+                    }
+                    else
+                    {
+                        *read_len = 0;
+                        return -1;
+                    }
+                    
+                }
+            }
+        }
+        else if(start_code_count == 1)
+        {
+            p_tmp = find_nal_start_code(temp_buff, 1024);
+        }
+        
+    }
+
 }

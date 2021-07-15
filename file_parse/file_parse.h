@@ -5,7 +5,8 @@
 extern "C"{
 #endif
 
- int parse_h264_file(char *buff, int n_read_len, int *n_parse_len);
+int print_nal_type(int nal_type);
+int parse_h264_file(char *buff, int n_read_len, int *n_parse_len);
 
 #ifdef __cplusplus
 }

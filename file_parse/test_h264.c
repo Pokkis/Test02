@@ -32,6 +32,8 @@ int main()
         }
         //printf("n_read_len:%d\n", n_read_len);
     }
-
+    print_nal_type(65&0x8f);
+    print_nal_type(67&0x8f);
+    print_nal_type(68&0x8f);
     return 0;
 }
