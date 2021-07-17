@@ -53,6 +53,7 @@ int print_nal_type(int nal_type)
     static int I = 0;
     static int P = 0;
     int i = 0;
+    int ret = -1;
     for(i = 0; i < sizeof(g_nal_str) / sizeof(g_nal_str[0]); i++)
     {
         if(nal_type == g_nal_str[i].nal_type)
@@ -66,9 +67,11 @@ int print_nal_type(int nal_type)
                 P++;
             }
             BLUE_TRACE("type:%d %s I:%d P:%d\n", g_nal_str[i].nal_type, g_nal_str[i].str, I, P);
+            ret = 0;
+            break;
         }
     }
-   return 0; 
+   return ret; 
 }
 
 static bool find_nal_type(char *buff, int n_read_len)
@@ -144,7 +147,7 @@ int parse_h264_file(char *buff, int n_read_len, int *n_parse_len)
 
 int copy_nal_from_file(FILE *fp, char *p_buff, int buff_len, int *read_len)
 {
-    if(NULL == fg || NULL == p_buff || NULL == read_len)
+    if(NULL == fp || NULL == p_buff || NULL == read_len)
     {
         ERR("NULL pointer\n");
         return -1;
@@ -172,7 +175,7 @@ int copy_nal_from_file(FILE *fp, char *p_buff, int buff_len, int *read_len)
                 {
                     if(buff_len > (p_tmp - p_start))
                     {
-                        memcpy(p_buff+*read_len, p_start, p_tmp - p_start)
+                        memcpy(p_buff+*read_len, p_start, p_tmp - p_start);
                     }
                     else
                     {

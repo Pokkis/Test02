@@ -1,3 +1,6 @@
 *.plist
 *.out
 *.o
+*.h264
+client/client
+server/server.c
