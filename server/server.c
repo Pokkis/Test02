@@ -68,8 +68,7 @@ int main(int argc, char *argv[])
 	int err = getsockopt(s, SOL_SOCKET, SO_SNDBUF, &snd_size, &optlen);
 	if (err < 0)
 	{
-
-			printf("get send buff failed！\n");
+		printf("get send buff failed！\n");
 	}
 	int rcv_size = 0;
 	optlen = sizeof(rcv_size);
@@ -102,12 +101,12 @@ int main(int argc, char *argv[])
 			{
 				start++;
 				printf("start_code:%d start:%d\n", *(start_code+4)&0x1f, start);
-				if(start == 5)
+				if(start == 15)
 				{
 					fclose(f_h264);
 					break;
 				}
-			}
+			} 
 			
             if(start_code)
             {
@@ -140,9 +139,17 @@ int main(int argc, char *argv[])
                 }
                 else
                 {
-					if(start)
+					if(start < 2)
 					{
+						
 						fwrite(buf + reveive_len, 1, n - reveive_len, f_h264);
+					}
+					else
+					{
+						if((*(buf + reveive_len + 4) & 0x1f) != 7 && (*(buf + reveive_len + 4) & 0x1f) != 8)
+						{
+							fwrite(buf + reveive_len, 1, n - reveive_len, f_h264);
+						}
 					}
 
 					total_len += n - reveive_len;
