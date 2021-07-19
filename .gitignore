@@ -4,3 +4,7 @@
 *.h264
 client/client
 server/server.c
+client/multicast/client
+.gitignore
+server/multicast/server
+server/udp/server

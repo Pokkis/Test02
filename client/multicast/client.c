@@ -7,7 +7,7 @@
 #include <errno.h>
 
 #define MAXBUF 1024*200
-#define SEND_FILE "../resource/128x128.264"
+#define SEND_FILE "../../resource/128x128.264"
 int port = 5000;
 char *multicast_addr = "224.0.1.1";
 
