@@ -31,7 +31,7 @@ void decode_rtp2h264(uint8_t *rtp_buf, int len, FILE *savefp)
     uint8_t h264_nal_header;
 
     /*
-     * 1. ¸ù¾ÝºÉÔØÍ·typeÅÐ¶ÏÊÇµ¥Ò»°ü»¹ÊÇ·Ö²ðµÄ°ü
+     * 1. ï¿½ï¿½ï¿½Ýºï¿½ï¿½ï¿½Í·typeï¿½Ð¶ï¿½ï¿½Çµï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½Ç·Ö²ï¿½Ä°ï¿½
      */
     nalu_header = (nalu_header_t *)&rtp_buf[12];
     if (nalu_header->type == 28) { /* FU-A */
@@ -113,7 +113,7 @@ int main(int argc, char **argv)
 #endif
 
     /*
-     * ³õÊ¼»¯ socket
+     * ï¿½ï¿½Ê¼ï¿½ï¿½ socket
      */
     socket_s = socket(AF_INET, SOCK_DGRAM, 0);
     if (socket_s < 0) {
@@ -123,7 +123,7 @@ int main(int argc, char **argv)
 
         unsigned int value = 1;
         setsockopt(socket_s, SOL_SOCKET, SO_REUSEADDR, 
-                   &value, sizeof(value));  /* ¶Ë¿Ú¸´ÓÃ */
+                   &value, sizeof(value));  /* ï¿½Ë¿Ú¸ï¿½ï¿½ï¿½ */
 
         memset((char *)&si_me, 0, sizeof(si_me));
         si_me.sin_family = AF_INET;

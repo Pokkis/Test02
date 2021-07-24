@@ -40,6 +40,7 @@ static void add_client_list(linklist client_ip_list, char *ipaddr)
     pnode_tmp->send_fail_n = 0;
     pnode_tmp->node_info.socket_c = socket(AF_INET, SOCK_DGRAM, 0);
 
+    #if 0
     /*
      * 设置广播属性
      */
@@ -47,6 +48,7 @@ static void add_client_list(linklist client_ip_list, char *ipaddr)
         fprintf(stderr, "initSvr: Socket options set error.\n");
         exit(errno);
     }
+    #endif
 
     if ((connect(pnode_tmp->node_info.socket_c, (const struct sockaddr *)&server_c, sizeof(struct sockaddr_in))) == -1) {
         perror("connect");
