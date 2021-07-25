@@ -1,4 +1,6 @@
 #include "queue.h"
+#include <string.h>
+#include <stdlib.h>
 
 sequeue_data_t *CreateEmptyDataSequeue(int oneDataSize)
 {
