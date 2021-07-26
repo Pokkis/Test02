@@ -449,7 +449,7 @@ int main(int argc, char *argv[])
         
         fclose(f_h264);
         usleep(100);
-        break;
+        //break;
     }
 
     return 1;
