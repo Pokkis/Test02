@@ -4,6 +4,8 @@
         "commonsocket.h": "c",
         "inet.h": "c",
         "queue_linear_arrary.h": "c",
-        "queue_linear_pointer.h": "c"
+        "queue_linear_pointer.h": "c",
+        "h264tortp.h": "c",
+        "unistd.h": "c"
     }
 }

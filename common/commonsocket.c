@@ -368,3 +368,10 @@ int comm_sMulticastAddress(const char * szIp)
 	return addressInHostOrder >  0xE00000FF && addressInHostOrder <= 0xEFFFFFFF;
 }
 
+
+
+
+
+
+
+

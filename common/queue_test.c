@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "queue.h"
 
+#if 0
 typedef struct _node
 {
     char name[32];
@@ -53,3 +54,6 @@ int main()
     }
     return 0;
 }
+#endif
+
+

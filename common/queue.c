@@ -128,3 +128,9 @@ int DeAllDataQueue(sequeue_data_t *queue)
     pthread_mutex_unlock(&queue->EnQueueLock);
     return 0;
 }
+
+
+
+
+
+

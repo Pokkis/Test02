@@ -9,3 +9,6 @@ client/multicast/client
 server/multicast/server
 server/udp/server
 client/udp/client.c
+common/libcommon.a
+common/__.SYMDEF SORTED
+client/udp/client

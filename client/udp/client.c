@@ -4,8 +4,10 @@
 #include <sys/types.h>          /* See NOTES */
 #include <sys/socket.h>
 #include <arpa/inet.h>
- #include <arpa/inet.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 #include <unistd.h>
+#include <net/if.h>
 #include <errno.h>
 #include "../../common/h264tortp.h"
 
@@ -21,7 +23,8 @@ udp客户端
 #define MAXBUF 1024*200
 #define SEND_FILE "../../resource/test.h264"
 int port = 5454;
-char *udp_addr = "127.0.0.1";
+//char *udp_addr = "127.0.0.1";
+char *udp_addr = "192。168.1.100";
 
 int s;
 struct sockaddr_in srv;
@@ -338,8 +341,18 @@ static char* find_nal_start_code(char *buff, int n_read_len)
     return NULL;
 }
 
+char* comm_socket_getIp(int socket)
+{
+	struct sockaddr_in sockAddr;
+	socklen_t addrLen = sizeof(struct sockaddr);
+    printf("cdy 11 \n");
+	if (0 != getsockname(socket, (struct sockaddr *)&sockAddr, &addrLen))
+		return 0;
+    printf("cdy 12 \n");
+	return inet_ntoa(sockAddr.sin_addr);
+}
 
-
+#define SO_BINDTODEVICE 25
 int main(int argc, char *argv[])
 {
 
@@ -357,6 +370,12 @@ int main(int argc, char *argv[])
         return 0;
     }
 
+    /*绑定网卡*/
+    struct ifreq ifr;
+    memset(&ifr, 0x00, sizeof(ifr));
+    strncpy(ifr.ifr_name, "en6", strlen("en6"));
+    setsockopt(s, SOL_SOCKET, SO_BINDTODEVICE, (char *)&ifr, sizeof(ifr));
+
     /* 设置socket发送和接收缓冲区的大小*/
 	int optlen;
 	int snd_size = 200*1024;
@@ -371,6 +390,11 @@ int main(int argc, char *argv[])
         perror("connect");
         exit(-1);
     }
+
+    printf("cdy:%s\n",comm_socket_getIp(s));
+    printf("cdy:%s\n",comm_socket_getIp(s));
+    printf("cdy:%s\n",comm_socket_getIp(s));
+    printf("cdy:%s\n",comm_socket_getIp(s));
 
     int i = 0;
     int n = 0; //当前读取到的数据大小
@@ -408,11 +432,13 @@ int main(int argc, char *argv[])
                 {
                     if (h264nal2rtp_send(s, (uint8_t *)start_code, end_code - start_code, handle) < 0)
                     {
+                        
                         perror("sendto ");
                         return 0;
                     }
                     else
                     {
+                        printf("cdy:%s\n",comm_socket_getIp(s));
                         fprintf(stdout, "send type:%d size:%ld send_count:%d\n ", *(start_code+4)&0x1f, end_code - start_code, send_count);
 					    send_count++;
 					    send_len += end_code - start_code;
@@ -437,6 +463,7 @@ int main(int argc, char *argv[])
                     }
                     else
                     {
+                        
                         total_len += n - send_len;
                         fprintf(stdout, "send type:%d size:%d receive_count:%d\n ", *(start_code+4)&0x1f, n, send_count);
                         n_last = 0;
